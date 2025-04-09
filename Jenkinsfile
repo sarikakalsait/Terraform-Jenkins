@@ -11,38 +11,28 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    dir('terraform') {
-                        git 'https://github.com/sarikakalsait/Terraform-Jenkins.git'
+                    dir("terraform") {
+                        git "https://github.com/sarikakalsait/Terraform-Jenkins.git"
                     }
                 }
             }
         }
         stage('Plan') {
             steps {
-                dir('terraform') {
-                    sh 'terraform init'
-                    sh 'terraform plan -out=tfplan'
-                    sh 'terraform show -no-color tfplan > tfplan.txt'
-                }
-            }
-        }
-        stage('Approval') {
-            when {
-                expression { return !params.autoApprove }
-            }
-            steps {
-                script {
-                    def plan = readFile 'terraform/tfplan.txt'
-                    input message: 'Do you want to apply the plan?',
-                          parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-                }
+                sh '''
+                    cd terraform/
+                    terraform init
+                    terraform plan -out=tfplan
+                    terraform show -no-color tfplan > tfplan.txt
+                '''
             }
         }
         stage('Apply') {
             steps {
-                dir('terraform') {
-                    sh 'terraform apply -input=false tfplan'
-                }
+                sh '''
+                    cd terraform/
+                    terraform apply -input=false tfplan
+                '''
             }
         }
     }
