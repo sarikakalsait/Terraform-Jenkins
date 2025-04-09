@@ -28,10 +28,8 @@ pipeline {
             }
         }
     }
-    // Approval outside of stages
     post {
         beforeInput {
-            // Conditional approval prompt
             script {
                 if (!params.autoApprove) {
                     def plan = readFile 'terraform/tfplan.txt'
