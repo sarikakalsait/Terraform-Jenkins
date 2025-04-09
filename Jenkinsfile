@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 dir("terraform") {
-                    git "https://github.com/yeshwanthlm/Terraform-Jenkins.git"
+                    git "https://github.com/sarikakalsait/Terraform-Jenkins.git"
                 }
             }
         }
